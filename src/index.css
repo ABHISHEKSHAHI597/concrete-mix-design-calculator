@@ -1,0 +1,890 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Sans:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+
+/* ==================================================================
+   IS 10262 : 2019 mix design calculator
+   A lab worksheet and a batching instrument. Light only, by choice:
+   the page is paper.
+   ================================================================== */
+
+:root {
+  /* Ground and paper */
+  --ground: #e4e5e1;
+  --sheet: #fafaf8;
+  --sheet-alt: #f1f1ee;
+  --sheet-sunk: #ececeA;
+
+  /* Ink */
+  --ink: #1b2024;
+  --ink-2: #4a5359;
+  --ink-3: #737b81;
+
+  /* Rules */
+  --rule: #cbccc6;
+  --rule-soft: #dedfd9;
+  --rule-strong: #9aa0a0;
+
+  /* Action: hydration blue */
+  --hydro: #17506e;
+  --hydro-2: #2e86ab;
+  --hydro-wash: #e7eef2;
+
+  /* State */
+  --flag: #a62b1f;
+  --flag-wash: #f6e9e7;
+  --ok: #2f6b4f;
+  --ok-wash: #e8efea;
+  --warn: #8a5a0b;
+  --warn-wash: #f7f0e2;
+
+  /* Materials, as they actually look */
+  --m-cement: #b9b4a9;
+  --m-flyAsh: #9e9b91;
+  --m-ggbs: #d9d6cc;
+  --m-silicaFume: #5f5c57;
+  --m-metakaolin: #c9b9a8;
+  --m-water: #2e86ab;
+  --m-chem: #6e5b9b;
+  --m-fa: #c4954a;
+  --m-ca: #6b7078;
+  --m-air: #f4f4f1;
+
+  --serif: 'Newsreader', 'Georgia', 'Times New Roman', serif;
+  --sans: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+
+  --rail: 4rem;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { margin: 0; font-weight: 400; }
+
+button { font: inherit; color: inherit; }
+
+a { color: var(--hydro); text-underline-offset: 2px; }
+
+:focus-visible {
+  outline: 2px solid var(--hydro-2);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------
+   Shell
+   ------------------------------------------------------------------ */
+
+.shell { max-width: 1360px; margin: 0 auto; padding: 0 clamp(1rem, 3vw, 2.5rem); }
+
+.masthead {
+  background: var(--sheet);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.masthead-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding-block: 1.5rem 0;
+}
+
+.standard-mark {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.masthead h1 {
+  font-family: var(--serif);
+  font-size: clamp(1.75rem, 3.4vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  font-weight: 300;
+}
+
+.masthead .sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.0625rem;
+  color: var(--ink-2);
+  margin-top: 0.25rem;
+}
+
+/* Primary navigation, set as a row of ruled tabs */
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 1.25rem;
+  border-bottom: 1px solid transparent;
+}
+
+.nav button {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.5rem 0.9rem 0.7rem;
+  cursor: pointer;
+  color: var(--ink-2);
+  font-size: 0.875rem;
+  font-weight: 450;
+  white-space: nowrap;
+}
+.nav button:hover { color: var(--ink); }
+.nav button[aria-current='page'] {
+  color: var(--ink);
+  border-bottom-color: var(--hydro);
+  font-weight: 600;
+}
+.nav button:first-child { padding-left: 0; }
+
+@media (max-width: 560px) {
+  .nav button { padding: 0.45rem 0.55rem 0.6rem; font-size: 0.8125rem; }
+  .section-switch button { font-size: 0.75rem; padding: 0.4rem 0.6rem; }
+  .masthead-inner { padding-block: 1.1rem 0; }
+}
+
+/* Section switch: which part of the standard applies */
+.section-switch {
+  display: inline-flex;
+  border: 1px solid var(--rule-strong);
+  background: var(--sheet-sunk);
+  margin-bottom: 0.35rem;
+}
+.section-switch button {
+  background: none;
+  border: none;
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+.section-switch button + button { border-left: 1px solid var(--rule); }
+.section-switch button[aria-pressed='true'] {
+  background: var(--ink);
+  color: #fff;
+}
+
+/* ------------------------------------------------------------------
+   Layout
+   ------------------------------------------------------------------ */
+
+.work { display: grid; grid-template-columns: minmax(0, 1fr) 24.5rem; gap: 0; align-items: start; }
+@media (max-width: 1100px) { .work { grid-template-columns: minmax(0, 1fr); } }
+
+.worksheet {
+  background: var(--sheet);
+  border-left: 1px solid var(--rule);
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 2rem;
+}
+
+.instrument {
+  position: sticky;
+  top: 0;
+  background: var(--sheet-alt);
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 1.5rem 1.35rem 1.75rem;
+  max-height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-strong) transparent;
+}
+@media (max-width: 1100px) {
+  .instrument { position: static; max-height: none; border-left: 1px solid var(--rule); }
+}
+
+/* ------------------------------------------------------------------
+   Worksheet sections: clause number in a margin rail
+   ------------------------------------------------------------------ */
+
+.wsec { border-bottom: 1px solid var(--rule-soft); }
+.wsec:last-child { border-bottom: none; }
+
+.wsec-head {
+  display: grid;
+  grid-template-columns: var(--rail) 1fr auto;
+  align-items: baseline;
+  gap: 0.5rem;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 1.15rem 1.35rem 0.9rem;
+  cursor: pointer;
+}
+.wsec-head:hover .wsec-title { color: var(--hydro); }
+
+.clause {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--ink-3);
+  padding-top: 0.32rem;
+  white-space: nowrap;
+}
+
+.wsec-title {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+
+.wsec-caret { color: var(--ink-3); font-size: 0.75rem; padding-top: 0.35rem; }
+
+.wsec-body { padding: 0 1.35rem 1.35rem; }
+.wsec-body > .rail { padding-left: var(--rail); }
+@media (max-width: 640px) {
+  .wsec-head { grid-template-columns: 1fr auto; }
+  .clause { grid-column: 1 / -1; padding-top: 0; }
+  .wsec-body > .rail { padding-left: 0; }
+}
+
+.sec-note {
+  font-family: var(--serif);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 1.1rem;
+}
+
+/* ------------------------------------------------------------------
+   Fields, laid out like a filled-in form
+   ------------------------------------------------------------------ */
+
+.fields { display: grid; gap: 0; }
+
+.field {
+  display: grid;
+  grid-template-columns: 1fr 11.5rem;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px dotted var(--rule);
+}
+.field:last-child { border-bottom: none; }
+.field.wide { grid-template-columns: 1fr; }
+
+@media (max-width: 560px) {
+  .field { grid-template-columns: 1fr; gap: 0.35rem; padding: 0.6rem 0; }
+}
+
+.field-label { font-size: 0.875rem; color: var(--ink-2); }
+.field-label .hint {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--ink-3);
+  line-height: 1.4;
+}
+.field-label .ref {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--ink-3);
+}
+
+.control {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--rule-strong);
+  background: #fff;
+}
+.control:focus-within { border-color: var(--hydro-2); box-shadow: 0 0 0 2px var(--hydro-wash); }
+
+.control input,
+.control select {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  padding: 0.4rem 0.5rem;
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  color: var(--ink);
+}
+.control select { font-family: var(--sans); cursor: pointer; }
+.control input { text-align: right; }
+.control input:focus, .control select:focus { outline: none; }
+
+.control .unit {
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
+  background: var(--sheet-sunk);
+  border-left: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.control.locked { background: var(--sheet-sunk); border-style: dashed; }
+.control.locked input { color: var(--ink-3); }
+
+/* Radio group, as a segmented row */
+.segmented { display: inline-flex; border: 1px solid var(--rule-strong); background: #fff; width: 100%; }
+.segmented button {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.segmented button + button { border-left: 1px solid var(--rule); }
+.segmented button[aria-pressed='true'] { background: var(--hydro); color: #fff; }
+
+.check-row { display: flex; align-items: center; gap: 0.55rem; font-size: 0.875rem; }
+.check-row input { accent-color: var(--hydro); width: 1rem; height: 1rem; }
+
+/* ------------------------------------------------------------------
+   The unit cubic metre: the one bold element on the page
+   ------------------------------------------------------------------ */
+
+.cube-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.cube-head h2 {
+  font-family: var(--serif);
+  font-size: 1.125rem;
+}
+.cube-head .cube-unit { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-3); }
+
+.cube { display: grid; grid-template-columns: 2.2rem 3.6rem 1fr; gap: 0.35rem; }
+
+.cube-scale {
+  position: relative;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  color: var(--ink-3);
+  height: 20rem;
+}
+.cube-scale span {
+  position: absolute;
+  right: 0;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+.cube-scale span::after {
+  content: '';
+  position: absolute;
+  right: -0.4rem;
+  top: 50%;
+  width: 0.25rem;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.cube-bar {
+  height: 20rem;
+  border: 1px solid var(--ink);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--m-air);
+}
+
+.cube-seg {
+  transition: flex-basis 220ms ease-out;
+  position: relative;
+  border-bottom: 1px solid rgba(27, 32, 36, 0.35);
+}
+.cube-seg:last-child { border-bottom: none; }
+.cube-seg[data-key='ca'] {
+  background-image: repeating-linear-gradient(
+    132deg,
+    rgba(255, 255, 255, 0.14) 0 2px,
+    transparent 2px 6px
+  );
+}
+.cube-seg[data-key='fa'] {
+  background-image: repeating-linear-gradient(
+    48deg,
+    rgba(255, 255, 255, 0.2) 0 1px,
+    transparent 1px 4px
+  );
+}
+.cube-seg[data-key='air'] {
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--rule) 0 1px,
+    transparent 1px 5px
+  );
+}
+
+.cube-legend { font-size: 0.75rem; align-self: start; }
+.cube-legend table { width: 100%; border-collapse: collapse; }
+.cube-legend td { padding: 0.12rem 0; vertical-align: baseline; }
+.cube-legend .sw {
+  width: 0.7rem;
+  height: 0.7rem;
+  display: inline-block;
+  border: 1px solid rgba(27, 32, 36, 0.4);
+  margin-right: 0.4rem;
+  vertical-align: -1px;
+}
+.cube-legend .name { color: var(--ink-2); padding-right: 0.4rem; line-height: 1.35; }
+.cube-legend .qty { font-family: var(--mono); text-align: right; white-space: nowrap; padding-left: 0.6rem; }
+.cube-legend .qty.vol { color: var(--ink-2); }
+.cube-legend thead td {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.2rem;
+}
+
+@media (max-width: 1100px) {
+  .cube { grid-template-columns: 2.4rem 4.5rem 1fr; max-width: 34rem; }
+}
+@media (max-width: 480px) {
+  .cube { grid-template-columns: 2rem 3.25rem 1fr; }
+  .cube-scale, .cube-bar { height: 17rem; }
+}
+
+/* ------------------------------------------------------------------
+   Readouts
+   ------------------------------------------------------------------ */
+
+.readouts { margin-top: 1.5rem; border-top: 1px solid var(--rule-strong); }
+
+.readout {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.readout .rl { font-size: 0.8125rem; color: var(--ink-2); }
+.readout .rl small { display: block; font-family: var(--mono); font-size: 0.6875rem; color: var(--ink-3); }
+.readout .rv { font-family: var(--mono); font-size: 1rem; white-space: nowrap; }
+.readout .rv em { font-style: normal; font-size: 0.6875rem; color: var(--ink-3); margin-left: 0.2rem; }
+.readout.lead .rv { font-size: 1.4rem; letter-spacing: -0.02em; }
+.readout.lead { padding: 0.7rem 0; }
+
+.ratio-line {
+  font-family: var(--mono);
+  font-size: 1.0625rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.ratio-line small { display: block; font-size: 0.6875rem; color: var(--ink-3); font-family: var(--sans); }
+
+/* Durability lamps */
+.lamps { margin-top: 1.25rem; }
+.lamps h3 {
+  font-family: var(--serif);
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+.lamp {
+  display: grid;
+  grid-template-columns: 0.85rem 1fr;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 0.8125rem;
+}
+.lamp .dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  margin-top: 0.4rem;
+}
+.lamp.pass .dot { background: var(--ok); }
+.lamp.fail .dot { background: var(--flag); }
+.lamp.warn .dot { background: var(--warn); }
+.lamp .lt { color: var(--ink); display: block; }
+.lamp .ld { font-family: var(--mono); font-size: 0.6875rem; color: var(--ink-3); display: block; line-height: 1.4; }
+.lamp.fail .lt { color: var(--flag); }
+
+/* ------------------------------------------------------------------
+   Output panel below the worksheet
+   ------------------------------------------------------------------ */
+
+.outputs { background: var(--sheet); border: 1px solid var(--rule); border-top: none; }
+
+.otabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--rule-strong); background: var(--sheet-alt); }
+.otabs button {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+.otabs button:hover { color: var(--ink); }
+.otabs button[aria-pressed='true'] {
+  color: var(--ink);
+  background: var(--sheet);
+  border-bottom-color: var(--hydro);
+  font-weight: 600;
+}
+
+.opanel { padding: 1.5rem clamp(1rem, 2.5vw, 1.75rem) 2rem; }
+
+/* ------------------------------------------------------------------
+   Calculation sheet: clause rail, substituted expression, value
+   ------------------------------------------------------------------ */
+
+.calcstep { display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); gap: 0.75rem; padding-bottom: 1.5rem; max-width: 58rem; }
+.calcstep > .ct { grid-column: 2; }
+.calcstep h3 {
+  font-family: var(--serif);
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--rule);
+}
+@media (max-width: 640px) {
+  .calcstep { grid-template-columns: 1fr; gap: 0.1rem; }
+  .calcstep > .ct { grid-column: 1; }
+}
+
+.calcline {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.3rem 1rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px dotted var(--rule);
+  align-items: baseline;
+}
+.calcline:last-of-type { border-bottom: none; }
+.calcline .cl { font-size: 0.875rem; color: var(--ink-2); max-width: 46ch; }
+.calcline .ce {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+  margin-top: 0.1rem;
+}
+.calcline .cv { font-family: var(--mono); font-size: 0.9375rem; white-space: nowrap; }
+.calcline .cv em { font-style: normal; font-size: 0.6875rem; color: var(--ink-3); margin-left: 0.25rem; }
+.calcline.emph { background: var(--hydro-wash); margin-inline: -0.5rem; padding-inline: 0.5rem; }
+.calcline.emph .cl { color: var(--ink); font-weight: 500; }
+.calcline.emph .cv { font-weight: 500; }
+
+.step-note {
+  font-family: var(--serif);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 68ch;
+  margin-top: 0.7rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--rule);
+}
+
+/* ------------------------------------------------------------------
+   Data tables
+   ------------------------------------------------------------------ */
+
+.tbl-wrap { overflow-x: auto; }
+
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+table.data caption {
+  text-align: left;
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  padding-bottom: 0.5rem;
+  color: var(--ink);
+}
+table.data th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--ink-2);
+  border-bottom: 1px solid var(--ink);
+  padding: 0.4rem 0.6rem 0.4rem 0;
+  vertical-align: bottom;
+}
+table.data td {
+  padding: 0.4rem 0.6rem 0.4rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: baseline;
+}
+table.data td.num, table.data th.num { text-align: right; font-family: var(--mono); }
+table.data th.num { font-family: var(--sans); }
+table.data tr.total td { border-top: 1px solid var(--ink); border-bottom: none; font-weight: 600; }
+table.data tr.total td.num { font-weight: 500; }
+table.data .ref { font-family: var(--mono); font-size: 0.6875rem; color: var(--ink-3); }
+
+/* ------------------------------------------------------------------
+   Callouts
+   ------------------------------------------------------------------ */
+
+.callout {
+  padding: 0.7rem 0.9rem;
+  border-left: 3px solid;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  margin-bottom: 0.6rem;
+}
+.callout.warn { background: var(--warn-wash); border-color: var(--warn); }
+.callout.err { background: var(--flag-wash); border-color: var(--flag); }
+.callout.info { background: var(--hydro-wash); border-color: var(--hydro-2); }
+.callout.ok { background: var(--ok-wash); border-color: var(--ok); }
+.callout h4 { font-weight: 600; font-size: 0.8125rem; margin-bottom: 0.15rem; }
+
+/* ------------------------------------------------------------------
+   Buttons
+   ------------------------------------------------------------------ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--hydro);
+  color: #fff;
+  border: 1px solid var(--hydro);
+  padding: 0.45rem 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.btn:hover { background: #103d54; }
+.btn.ghost { background: none; color: var(--ink); border-color: var(--rule-strong); }
+.btn.ghost:hover { background: var(--sheet-sunk); }
+.btn.quiet { background: none; color: var(--hydro); border-color: transparent; padding-inline: 0.25rem; }
+.btn.quiet:hover { background: var(--hydro-wash); }
+.btn.danger { background: none; color: var(--flag); border-color: var(--rule-strong); }
+.btn.danger:hover { background: var(--flag-wash); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+
+/* ------------------------------------------------------------------
+   Prose pages (methodology)
+   ------------------------------------------------------------------ */
+
+.page { background: var(--sheet); border: 1px solid var(--rule); padding: clamp(1.25rem, 3vw, 2.5rem); }
+
+.prose { max-width: 72ch; }
+.prose h2 {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  margin: 2rem 0 0.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--rule);
+}
+.prose h2:first-child { margin-top: 0; }
+.prose h3 { font-size: 0.9375rem; font-weight: 600; margin: 1.35rem 0 0.3rem; }
+.prose p {
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.65;
+  margin: 0 0 0.9rem;
+}
+.prose ul, .prose ol { font-family: var(--serif); font-size: 1rem; line-height: 1.65; padding-left: 1.3rem; margin: 0 0 0.9rem; }
+.prose li { margin-bottom: 0.35rem; }
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  background: var(--sheet-sunk);
+  padding: 0.1rem 0.3rem;
+}
+.prose .lede {
+  font-size: 1.125rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  font-style: italic;
+}
+
+/* ------------------------------------------------------------------
+   Verification
+   ------------------------------------------------------------------ */
+
+.vcase { margin-bottom: 2.5rem; }
+.vcase-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.75rem; margin-bottom: 0.4rem; }
+.vcase-head h3 { font-family: var(--serif); font-size: 1.3125rem; }
+.tally {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid;
+}
+.tally.all { color: var(--ok); border-color: var(--ok); background: var(--ok-wash); }
+.tally.some { color: var(--flag); border-color: var(--flag); background: var(--flag-wash); }
+
+.mark { font-family: var(--mono); font-size: 0.6875rem; }
+.mark.exact { color: var(--ok); }
+.mark.ok { color: var(--warn); }
+.mark.fail { color: var(--flag); font-weight: 500; }
+
+/* ------------------------------------------------------------------
+   Saved designs
+   ------------------------------------------------------------------ */
+
+.saved-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.saved-item .si-t { font-weight: 500; }
+.saved-item .si-m { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-3); }
+
+.empty {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-2);
+  padding: 1.5rem 0;
+}
+
+/* ------------------------------------------------------------------
+   Figure 1 plot
+   ------------------------------------------------------------------ */
+
+.fig1 { max-width: 32rem; }
+.fig1 svg { width: 100%; height: auto; display: block; }
+.fig1 .grid { stroke: var(--rule); stroke-width: 0.5; }
+.fig1 .axis { stroke: var(--ink); stroke-width: 1; }
+.fig1 .curve { fill: none; stroke: var(--ink-2); stroke-width: 1.2; }
+.fig1 .curve.live { stroke: var(--hydro); stroke-width: 2; }
+.fig1 .tick { font-family: var(--mono); font-size: 7px; fill: var(--ink-3); }
+.fig1 .axlabel { font-family: var(--sans); font-size: 7.5px; fill: var(--ink-2); }
+.fig1 .marker { fill: var(--flag); }
+.fig1 .markerline { stroke: var(--flag); stroke-width: 0.8; stroke-dasharray: 2 2; }
+.fig1 .curvelabel { font-family: var(--mono); font-size: 7px; fill: var(--ink-3); }
+
+/* ------------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------------ */
+
+.foot {
+  padding: 2rem 0 3rem;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  max-width: 72ch;
+}
+.foot p { margin: 0 0 0.5rem; }
+
+/* ------------------------------------------------------------------
+   Print: the report
+   ------------------------------------------------------------------ */
+
+.print-only { display: none; }
+
+@media print {
+  @page { size: A4; margin: 16mm 14mm; }
+
+  body { background: #fff; font-size: 9.5pt; line-height: 1.45; }
+
+  .no-print, .masthead, .nav, .instrument, .otabs, .foot,
+  .worksheet, .outputs { display: none !important; }
+  .print-only { display: block; }
+
+  .shell { max-width: none; padding: 0; }
+  .work { display: block; }
+  .worksheet, .outputs, .page { border: none; background: #fff; padding: 0; }
+  .opanel { padding: 0; }
+
+  .report-head {
+    border-bottom: 1.5pt solid #000;
+    padding-bottom: 6pt;
+    margin-bottom: 12pt;
+  }
+  .report-head h1 { font-family: var(--serif); font-size: 17pt; font-weight: 400; }
+  .report-head .standard-mark { font-size: 7.5pt; color: #444; }
+  .report-head .meta { display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 8pt; color: #333; margin-top: 4pt; }
+
+  .calcstep { page-break-inside: avoid; padding-bottom: 10pt; }
+  .calcstep h3 { font-size: 11pt; }
+  .calcline.emph { background: #f0f0f0; }
+  table.data { font-size: 8.5pt; page-break-inside: avoid; }
+  .cube-bar, .cube-scale { height: 55mm; }
+  .callout { page-break-inside: avoid; border-left-width: 2pt; }
+  .prose { max-width: none; }
+  h2, h3 { page-break-after: avoid; }
+  .page-break { page-break-before: always; }
+  a { color: #000; text-decoration: none; }
+}
+
+/* ------------------------------------------------------------------
+   Printed report typography
+   ------------------------------------------------------------------ */
+
+.report-h2 {
+  font-family: var(--serif);
+  font-size: 14pt;
+  font-weight: 400;
+  margin: 0 0 8pt;
+  padding-bottom: 3pt;
+  border-bottom: 1pt solid var(--ink);
+}
+
+.report-foot {
+  margin-top: 14pt;
+  padding-top: 6pt;
+  border-top: 0.5pt solid var(--rule-strong);
+  font-size: 8pt;
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: none;
+}
+
+/* ------------------------------------------------------------------
+   Section switch: four parts of the standard, number over name
+   ------------------------------------------------------------------ */
+
+.section-switch {
+  display: inline-grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 1px;
+  background: var(--rule-strong);
+  border: 1px solid var(--rule-strong);
+}
+.section-switch button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.05rem;
+  background: var(--sheet-sunk);
+  line-height: 1.25;
+  padding: 0.45rem 0.8rem;
+}
+.section-switch button + button { border-left: none; }
+.section-switch .sw-num { font-family: var(--mono); font-size: 0.6875rem; opacity: 0.72; }
+.section-switch .sw-name { font-size: 0.8125rem; white-space: nowrap; }
+.section-switch button[aria-pressed='true'] { background: var(--ink); color: #fff; }
+.section-switch button[aria-pressed='true'] .sw-num { opacity: 0.8; }
+
+@media (max-width: 900px) {
+  .section-switch { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+}
+
+/* Figure 1 reading tolerance */
+.fig1 .band { fill: var(--flag); opacity: 0.09; }
